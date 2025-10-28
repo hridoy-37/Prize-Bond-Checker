@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, CheckCircle, XCircle, Loader, History, Trash2 } from 'lucide-react';
+import { Upload, CheckCircle, XCircle, Loader, History, Trash2, FileText, Sparkles } from 'lucide-react';
 
 const loadPdfJs = () => {
     return new Promise((resolve) => {
@@ -19,7 +19,6 @@ const loadPdfJs = () => {
     });
 };
 
-// Add animation styles
 const styles = `
   @keyframes slideDown {
     from {
@@ -33,6 +32,41 @@ const styles = `
   }
   .animate-slideDown {
     animation: slideDown 0.3s ease-out;
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background-size: 1000px 100%;
+  }
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+    }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
 `;
 
@@ -122,7 +156,6 @@ const PrizeBondChecker = () => {
             return;
         }
 
-        // Reset previous data when uploading new PDF
         setBondCodes('');
         setResults(null);
         setShowResults(false);
@@ -219,21 +252,20 @@ const PrizeBondChecker = () => {
     };
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'}`}>
-            {/* Modern Alert Notification */}
+        <div className={`min-h-screen transition-all duration-500 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'}`}>
             {alert && (
                 <div className="fixed top-24 md:top-28 left-1/2 transform -translate-x-1/2 z-[100] animate-slideDown px-4">
-                    <div className={`flex items-center gap-3 px-4 md:px-6 py-3 md:py-4 rounded-lg shadow-2xl border backdrop-blur-sm ${alert.type === 'success'
+                    <div className={`flex items-center gap-3 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-2xl border-2 backdrop-blur-md ${alert.type === 'success'
                             ? darkMode
-                                ? 'bg-green-900/95 border-green-600 text-green-100'
-                                : 'bg-green-50 border-green-400 text-green-800'
+                                ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
+                                : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-900'
                             : alert.type === 'error'
                                 ? darkMode
-                                    ? 'bg-red-900/95 border-red-600 text-red-100'
-                                    : 'bg-red-50 border-red-400 text-red-800'
+                                    ? 'bg-gradient-to-r from-red-900/95 to-rose-900/95 border-red-500/50 text-red-100'
+                                    : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-400 text-red-900'
                                 : darkMode
-                                    ? 'bg-blue-900/95 border-blue-600 text-blue-100'
-                                    : 'bg-blue-50 border-blue-400 text-blue-800'
+                                    ? 'bg-gradient-to-r from-blue-900/95 to-indigo-900/95 border-blue-500/50 text-blue-100'
+                                    : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-400 text-blue-900'
                         } min-w-[280px] max-w-md`}>
                         <div className="flex-shrink-0">
                             {alert.type === 'success' ? (
@@ -246,12 +278,12 @@ const PrizeBondChecker = () => {
                                 </svg>
                             )}
                         </div>
-                        <p className="flex-1 font-medium text-sm md:text-base">{alert.message}</p>
+                        <p className="flex-1 font-semibold text-sm md:text-base">{alert.message}</p>
                         <button
                             onClick={() => setAlert(null)}
-                            className={`flex-shrink-0 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'} rounded-full p-1 transition-colors`}
+                            className={`flex-shrink-0 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'} rounded-full p-1.5 transition-all hover:rotate-90 duration-300`}
                         >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -259,93 +291,54 @@ const PrizeBondChecker = () => {
                 </div>
             )}
 
-            <div
-                className={`${darkMode
-                        ? 'bg-gradient-to-r from-gray-800 to-gray-900'
-                        : 'bg-gradient-to-r from-blue-600 to-indigo-600'
-                    } text-white py-4 px-4 md:py-6 shadow-lg sticky top-0 z-50`}
-            >
-                <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:justify-between">
-                    {/* Title */}
-                    <div className="text-center sm:text-left flex-1 mb-2 sm:mb-0">
-                        <h1
-                            className="text-2xl md:text-4xl font-bold mb-1 md:mb-2 truncate"
-                            style={{
-                                // Ultra-small phones (<375px)
-                                '@media (max-width: 374px)': {
-                                    fontSize: '1rem', // smaller font
-                                },
-                            }}
+            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600'} text-white py-6 px-4 shadow-2xl sticky top-0 z-50 backdrop-blur-sm`}>
+                <div className="max-w-4xl mx-auto">
+                    <div className="flex items-center justify-between">
+                        <div className="text-center flex-1">
+                            <div className="flex items-center justify-center gap-3 mb-2">
+                                <Sparkles className="w-6 h-6 md:w-8 md:h-8 animate-pulse text-yellow-300" />
+                                <h1 className="text-2xl md:text-4xl font-black tracking-tight">
+                                    Prize Bond Checker
+                                </h1>
+                                <Sparkles className="w-6 h-6 md:w-8 md:h-8 animate-pulse text-yellow-300" />
+                            </div>
+                            <p className={`text-xs md:text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-blue-100'}`}>
+                                ⚡ Instant Results • 🔒 100% Private • 📱 Works Offline
+                            </p>
+                        </div>
+                        <button
+                            onClick={toggleDarkMode}
+                            className={`ml-4 p-2.5 md:p-3 rounded-xl ${darkMode ? 'bg-gray-700 hover:bg-gray-600 border border-gray-600' : 'bg-white/20 hover:bg-white/30 backdrop-blur-sm'} transition-all duration-300 hover:scale-110 active:scale-95`}
+                            aria-label="Toggle dark mode"
                         >
-                            🎟️ Prize Bond Checker
-                        </h1>
-                        <p
-                            className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-blue-100'
-                                }`}
-                            style={{
-                                '@media (max-width: 374px)': {
-                                    fontSize: '0.65rem',
-                                },
-                            }}
-                        >
-                            Check your bonds instantly, completely offline
-                        </p>
+                            {darkMode ? (
+                                <svg className="w-5 h-5 md:w-6 md:h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            )}
+                        </button>
                     </div>
-
-                    {/* Dark Mode Toggle */}
-                    <button
-                        onClick={toggleDarkMode}
-                        className={`ml-0 sm:ml-4 p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-400'
-                            } transition-colors mt-2 sm:mt-0`}
-                        aria-label="Toggle dark mode"
-                        style={{
-                            '@media (max-width: 374px)': {
-                                padding: '0.3rem',
-                            },
-                        }}
-                    >
-                        {darkMode ? (
-                            <svg
-                                className="w-5 h-5 sm:w-6 sm:h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                                />
-                            </svg>
-                        ) : (
-                            <svg
-                                className="w-5 h-5 sm:w-6 sm:h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                                />
-                            </svg>
-                        )}
-                    </button>
                 </div>
             </div>
 
-
             <div className="max-w-4xl mx-auto p-3 md:p-6 pb-20">
-                <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-6 transition-all hover:shadow-lg border ${darkMode ? 'border-gray-700' : ''}`}>
-                    <h2 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                        1. Upload Prize Bond List (PDF)
-                    </h2>
+                <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-blue-100'} group`}>
+                    <div className="flex items-center gap-3 mb-4 md:mb-5">
+                        <div className={`p-2 md:p-3 rounded-xl ${darkMode ? 'bg-blue-600/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+                            <FileText className="w-5 h-5 md:w-6 md:h-6" />
+                        </div>
+                        <h2 className={`text-lg md:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                            Upload Prize Bond PDF
+                        </h2>
+                    </div>
 
                     <label className="block">
-                        <div className={`border-2 border-dashed ${darkMode ? 'border-gray-600 hover:border-blue-400 bg-gray-700' : 'border-gray-300 hover:border-blue-500 bg-blue-50'} rounded-lg p-6 md:p-8 text-center cursor-pointer hover:bg-opacity-80 transition-all`}>
+                        <div className={`relative border-3 border-dashed ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50'} rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] group-hover:border-blue-500 overflow-hidden`}>
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
                             <input
                                 type="file"
                                 accept=".pdf"
@@ -353,62 +346,82 @@ const PrizeBondChecker = () => {
                                 className="hidden"
                                 disabled={loading}
                             />
-                            <Upload className={`mx-auto mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} size={40} />
-                            <p className={`text-base md:text-lg font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                                {pdfFileName || 'Click to select PDF file'}
+                            <Upload className={`mx-auto mb-4 ${darkMode ? 'text-gray-400 group-hover:text-blue-400' : 'text-blue-400 group-hover:text-blue-600'} transition-colors animate-float`} size={48} />
+                            <p className={`text-base md:text-xl font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'} mb-2`}>
+                                {pdfFileName || 'Drop PDF here or click to browse'}
                             </p>
-                            <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} mt-2`}>
-                                Upload the official prize bond list
+                            <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                Official prize bond list • Supports Bengali & English
                             </p>
                         </div>
                     </label>
 
                     {pdfFileName && (
-                        <div className={`mt-4 p-3 ${darkMode ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'} border rounded-lg flex items-center gap-2`}>
-                            <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'}`} size={20} />
-                            <span className={`text-sm md:text-base ${darkMode ? 'text-green-200' : 'text-green-800'} font-medium truncate`}>
-                                Loaded: {pdfFileName}
-                            </span>
+                        <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideDown`}>
+                            <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={24} />
+                            <div className="flex-1 min-w-0">
+                                <p className={`text-sm md:text-base ${darkMode ? 'text-green-200' : 'text-green-900'} font-bold truncate`}>
+                                    {pdfFileName}
+                                </p>
+                                <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
+                                    Ready to check bonds
+                                </p>
+                            </div>
                         </div>
                     )}
                 </div>
 
-                <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-6 transition-all hover:shadow-lg border ${darkMode ? 'border-gray-700' : ''}`}>
-                    <h2 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                        2. Enter Your Bond Codes
-                    </h2>
-                    <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                        Enter codes separated by comma or new line (supports Bengali and English)
-                    </p>
+                {pdfContent && (
+                    <>
+                        <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-purple-100'} animate-slideDown`}>
+                            <div className="flex items-center gap-3 mb-4 md:mb-5">
+                                <div className={`p-2 md:p-3 rounded-xl ${darkMode ? 'bg-purple-600/20 text-purple-400' : 'bg-purple-100 text-purple-600'}`}>
+                                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                    </svg>
+                                </div>
+                                <h2 className={`text-lg md:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    Enter Your Bond Codes
+                                </h2>
+                            </div>
+                            <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-4 flex items-center gap-2`}>
+                                <span className={`inline-block w-2 h-2 rounded-full ${darkMode ? 'bg-purple-500' : 'bg-purple-600'} animate-pulse`}></span>
+                                Comma or new line separated • ১২৩৪৫৬ or 123456
+                            </p>
 
-                    <textarea
-                        className={`w-full p-3 md:p-4 border ${darkMode ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base`}
-                        rows="6"
-                        placeholder="e.g., 123456, 234567 or ১২৩৪৫৬, ২৩৪৫৬৭"
-                        value={bondCodes}
-                        onChange={(e) => setBondCodes(e.target.value)}
-                    />
-                </div>
+                            <textarea
+                                className={`w-full p-4 md:p-5 border-2 ${darkMode ? 'border-gray-600 bg-gray-900/50 text-white placeholder-gray-500 focus:border-purple-500' : 'border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:border-purple-400'} rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-transparent resize-none text-base md:text-lg font-mono transition-all`}
+                                rows="6"
+                                placeholder="123456, 234567 or ১২৩৪৫৬, ২৩৪৫৬৭"
+                                value={bondCodes}
+                                onChange={(e) => setBondCodes(e.target.value)}
+                            />
+                        </div>
 
-                <button
-                    onClick={checkBonds}
-                    disabled={loading || !pdfContent}
-                    className={`w-full py-3 md:py-4 rounded-xl font-bold text-base md:text-lg text-white shadow-lg transition-all mb-4 md:mb-6 flex items-center justify-center gap-2 ${loading || !pdfContent
-                            ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
-                            : `${darkMode ? 'bg-blue-600 hover:bg-blue-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'} hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0`
-                        }`}
-                >
-                    {loading ? (
-                        <>
-                            <Loader className="animate-spin" size={24} />
-                            <span className="hidden sm:inline">Processing...</span>
-                        </>
-                    ) : (
-                        <>
-                            🔍 Check My Bonds
-                        </>
-                    )}
-                </button>
+                        <button
+                            onClick={checkBonds}
+                            disabled={loading || !pdfContent}
+                            className={`relative w-full py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl text-white shadow-2xl transition-all mb-5 md:mb-6 flex items-center justify-center gap-3 overflow-hidden group ${loading || !pdfContent
+                                    ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
+                                    : `${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700'} hover:shadow-purple-500/50 transform hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-100 animate-pulse-glow`
+                                }`}
+                        >
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
+                            {loading ? (
+                                <>
+                                    <Loader className="animate-spin" size={28} />
+                                    <span className="relative z-10">Analyzing Bonds...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="w-6 h-6 relative z-10" />
+                                    <span className="relative z-10">Check My Bonds</span>
+                                    <Sparkles className="w-6 h-6 relative z-10" />
+                                </>
+                            )}
+                        </button>
+                    </>
+                )}
 
                 {results && (
                     <div
@@ -416,57 +429,64 @@ const PrizeBondChecker = () => {
                             }`}
                     >
                         {results.matched.length > 0 ? (
-                            <div className={`${darkMode ? 'bg-gradient-to-br from-green-900 to-emerald-900 border-green-600' : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-400'} border-2 rounded-xl p-6 md:p-8 mb-4 md:mb-6 shadow-lg`}>
-                                <div className="text-center mb-4 md:mb-6">
-                                    <div className="text-5xl md:text-6xl mb-4 animate-bounce">🎉</div>
-                                    <h3 className={`text-2xl md:text-3xl font-bold ${darkMode ? 'text-green-300' : 'text-green-800'} mb-2`}>
-                                        Congratulations!
-                                    </h3>
-                                    <p className={`text-base md:text-lg ${darkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                        Your bond has won!
-                                    </p>
-                                </div>
+                            <div className={`relative ${darkMode ? 'bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-green-500/50' : 'bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 border-green-400'} border-3 rounded-3xl p-6 md:p-10 mb-5 md:mb-6 shadow-2xl overflow-hidden`}>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-green-400/10 rounded-full blur-3xl"></div>
+                                <div className="relative z-10">
+                                    <div className="text-center mb-6 md:mb-8">
+                                        <div className="text-6xl md:text-7xl mb-5 animate-bounce inline-block">🎉</div>
+                                        <h3 className={`text-3xl md:text-4xl font-black ${darkMode ? 'text-green-300' : 'text-green-800'} mb-3`}>
+                                            🎊 Congratulations! 🎊
+                                        </h3>
+                                        <p className={`text-lg md:text-xl font-semibold ${darkMode ? 'text-green-200' : 'text-green-700'}`}>
+                                            Your bond number matched!
+                                        </p>
+                                    </div>
 
-                                <div className="space-y-2 md:space-y-3">
-                                    {results.matched.map((code, index) => (
-                                        <div
-                                            key={index}
-                                            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-3 md:p-4 rounded-lg shadow flex items-center gap-3 transform transition-all hover:scale-105`}
-                                        >
-                                            <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={24} />
-                                            <span className={`text-lg md:text-xl font-semibold ${darkMode ? 'text-green-300' : 'text-green-800'} break-all`}>
-                                                {code}
-                                            </span>
-                                        </div>
-                                    ))}
+                                    <div className="space-y-3 md:space-y-4">
+                                        {results.matched.map((code, index) => (
+                                            <div
+                                                key={index}
+                                                className={`${darkMode ? 'bg-gray-800/80 border-green-600/30' : 'bg-white border-green-300'} p-4 md:p-5 rounded-2xl shadow-lg border-2 flex items-center gap-4 transform transition-all hover:scale-105 hover:shadow-xl`}
+                                            >
+                                                <div className={`p-3 rounded-xl ${darkMode ? 'bg-green-600/20' : 'bg-green-100'}`}>
+                                                    <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={28} />
+                                                </div>
+                                                <span className={`text-xl md:text-2xl font-black ${darkMode ? 'text-green-300' : 'text-green-800'} break-all`}>
+                                                    {code}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className={`${darkMode ? 'bg-gradient-to-br from-red-900 to-pink-900 border-red-600' : 'bg-gradient-to-br from-red-50 to-pink-50 border-red-400'} border-2 rounded-xl p-6 md:p-8 mb-4 md:mb-6 shadow-lg`}>
-                                <div className="text-center">
-                                    <div className="text-5xl md:text-6xl mb-4">❌</div>
-                                    <h3 className={`text-2xl md:text-3xl font-bold ${darkMode ? 'text-red-300' : 'text-red-800'} mb-2`}>
+                            <div className={`relative ${darkMode ? 'bg-gradient-to-br from-red-900 via-rose-900 to-red-900 border-red-500/50' : 'bg-gradient-to-br from-red-50 via-rose-50 to-red-50 border-red-400'} border-3 rounded-3xl p-6 md:p-10 mb-5 md:mb-6 shadow-2xl overflow-hidden`}>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-red-400/10 rounded-full blur-3xl"></div>
+                                <div className="relative z-10 text-center">
+                                    <div className="text-6xl md:text-7xl mb-5">😔</div>
+                                    <h3 className={`text-3xl md:text-4xl font-black ${darkMode ? 'text-red-300' : 'text-red-800'} mb-3`}>
                                         No Match Found
                                     </h3>
-                                    <p className={`text-base md:text-lg ${darkMode ? 'text-red-200' : 'text-red-700'}`}>
-                                        Please wait for the next draw.
+                                    <p className={`text-lg md:text-xl font-semibold ${darkMode ? 'text-red-200' : 'text-red-700'}`}>
+                                        Better luck next draw!
                                     </p>
                                 </div>
                             </div>
                         )}
 
                         {results.unmatched.length > 0 && (
-                            <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-xl p-4 md:p-6 mb-4 md:mb-6 shadow-md border ${darkMode ? 'border-gray-700' : ''}`}>
-                                <h4 className={`text-base md:text-lg font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-3`}>
-                                    Unmatched Codes:
+                            <div className={`${darkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-white/80 border-gray-200'} rounded-2xl p-5 md:p-6 mb-5 md:mb-6 shadow-lg border-2`}>
+                                <h4 className={`text-base md:text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4 flex items-center gap-2`}>
+                                    <XCircle size={20} />
+                                    Unmatched Codes
                                 </h4>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     {results.unmatched.map((code, index) => (
                                         <div
                                             key={index}
-                                            className={`${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'} px-2 md:px-3 py-2 rounded text-sm break-all`}
+                                            className={`${darkMode ? 'bg-gray-700/50 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300'} px-3 md:px-4 py-2 md:py-3 rounded-xl text-sm font-mono break-all border`}
                                         >
-                                            • {code}
+                                            {code}
                                         </div>
                                     ))}
                                 </div>
@@ -475,39 +495,39 @@ const PrizeBondChecker = () => {
 
                         <button
                             onClick={clearResults}
-                            className={`w-full py-3 mb-4 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border-2 rounded-lg font-semibold transition-all`}
+                            className={`w-full py-4 mb-4 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border-2 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl`}
                         >
-                            Check Again
+                            ← Check Again
                         </button>
                     </div>
                 )}
 
                 {recentChecks.length > 0 && (
-                    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-6 border ${darkMode ? 'border-gray-700' : ''}`}>
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className={`text-lg md:text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'} flex items-center gap-2`}>
+                    <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-6 mb-5 md:mb-6 border-2 ${darkMode ? 'border-gray-700' : 'border-orange-100'}`}>
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className={`text-lg md:text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} flex items-center gap-2`}>
                                 <History size={20} className="md:w-6 md:h-6" />
                                 <span className="hidden sm:inline">Recent Checks</span>
                                 <span className="sm:hidden">Recent</span>
                             </h2>
                             <button
                                 onClick={clearHistory}
-                                className={`${darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-700'} flex items-center gap-1 text-sm`}
+                                className={`${darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-700'} flex items-center gap-1 text-sm transition-all hover:scale-110`}
                             >
                                 <Trash2 size={16} />
                                 <span className="hidden sm:inline">Clear</span>
                             </button>
                         </div>
 
-                        <div className="space-y-2 md:space-y-3">
+                        <div className="space-y-3">
                             {recentChecks.slice(0, 5).map((check) => (
                                 <div
                                     key={check.id}
                                     onClick={() => loadRecentCheck(check)}
-                                    className={`flex items-center justify-between p-3 md:p-4 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} rounded-lg cursor-pointer transition-all active:scale-95`}
+                                    className={`flex items-center justify-between p-3 md:p-4 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} rounded-xl cursor-pointer transition-all active:scale-95 border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
                                 >
                                     <div className="flex-1 min-w-0 pr-2">
-                                        <div className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        <div className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'} font-medium`}>
                                             {new Date(check.date).toLocaleDateString('en-US', {
                                                 month: 'short',
                                                 day: 'numeric',
@@ -522,13 +542,13 @@ const PrizeBondChecker = () => {
                                     </div>
                                     <div className="flex items-center gap-2 flex-shrink-0">
                                         {check.hasMatch ? (
-                                            <span className={`px-2 md:px-3 py-1 ${darkMode ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-800'} rounded-full text-xs md:text-sm font-medium flex items-center gap-1`}>
+                                            <span className={`px-2 md:px-3 py-1 ${darkMode ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-800'} rounded-full text-xs md:text-sm font-bold flex items-center gap-1`}>
                                                 <CheckCircle size={14} />
                                                 <span className="hidden sm:inline">{check.matchCount} Match{check.matchCount > 1 ? 'es' : ''}</span>
                                                 <span className="sm:hidden">{check.matchCount}</span>
                                             </span>
                                         ) : (
-                                            <span className={`px-2 md:px-3 py-1 ${darkMode ? 'bg-red-900 text-red-200' : 'bg-red-100 text-red-800'} rounded-full text-xs md:text-sm font-medium flex items-center gap-1`}>
+                                            <span className={`px-2 md:px-3 py-1 ${darkMode ? 'bg-red-900 text-red-200' : 'bg-red-100 text-red-800'} rounded-full text-xs md:text-sm font-bold flex items-center gap-1`}>
                                                 <XCircle size={14} />
                                                 <span className="hidden sm:inline">No match</span>
                                                 <span className="sm:hidden">✗</span>
@@ -541,11 +561,11 @@ const PrizeBondChecker = () => {
                     </div>
                 )}
 
-                <div className="text-center py-4 md:py-6">
-                    <div className={`inline-flex items-center gap-2 px-3 md:px-4 py-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-full shadow-sm`}>
-                        <span className={`w-2 h-2 ${darkMode ? 'bg-green-400' : 'bg-green-500'} rounded-full animate-pulse`}></span>
-                        <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                            All checks are performed offline on your device
+                <div className="text-center py-6 md:py-8">
+                    <div className={`inline-flex items-center gap-3 px-4 md:px-6 py-3 md:py-4 ${darkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-white/80 border-gray-200'} rounded-2xl shadow-lg border-2`}>
+                        <span className={`w-3 h-3 ${darkMode ? 'bg-green-400' : 'bg-green-500'} rounded-full animate-pulse`}></span>
+                        <p className={`text-xs md:text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            🔒 All checks performed offline • 100% Private
                         </p>
                     </div>
                 </div>
