@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Upload, CheckCircle, XCircle, Loader, History, Trash2, FileText, Sparkles } from 'lucide-react';
+import { CheckCircle, FileText, History, Loader, Sparkles, Trash2, Upload, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const loadPdfJs = () => {
     return new Promise((resolve) => {
@@ -256,16 +256,16 @@ const PrizeBondChecker = () => {
             {alert && (
                 <div className="fixed top-24 md:top-28 left-1/2 transform -translate-x-1/2 z-[100] animate-slideDown px-4">
                     <div className={`flex items-center gap-3 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-2xl border-2 backdrop-blur-md ${alert.type === 'success'
+                        ? darkMode
+                            ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
+                            : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-900'
+                        : alert.type === 'error'
                             ? darkMode
-                                ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
-                                : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-900'
-                            : alert.type === 'error'
-                                ? darkMode
-                                    ? 'bg-gradient-to-r from-red-900/95 to-rose-900/95 border-red-500/50 text-red-100'
-                                    : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-400 text-red-900'
-                                : darkMode
-                                    ? 'bg-gradient-to-r from-blue-900/95 to-indigo-900/95 border-blue-500/50 text-blue-100'
-                                    : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-400 text-blue-900'
+                                ? 'bg-gradient-to-r from-red-900/95 to-rose-900/95 border-red-500/50 text-red-100'
+                                : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-400 text-red-900'
+                            : darkMode
+                                ? 'bg-gradient-to-r from-blue-900/95 to-indigo-900/95 border-blue-500/50 text-blue-100'
+                                : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-400 text-blue-900'
                         } min-w-[280px] max-w-md`}>
                         <div className="flex-shrink-0">
                             {alert.type === 'success' ? (
@@ -291,7 +291,7 @@ const PrizeBondChecker = () => {
                 </div>
             )}
 
-            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600'} text-white py-6 px-4 shadow-2xl sticky top-0 z-50 backdrop-blur-sm`}>
+            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600'} text-white py-6 px-4 shadow-2xl sticky lg:top-0 z-50 backdrop-blur-sm`}>
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center justify-between">
                         <div className="text-center flex-1">
@@ -428,8 +428,8 @@ const PrizeBondChecker = () => {
                             onClick={checkBonds}
                             disabled={loading || !pdfContent}
                             className={`relative w-full py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl text-white shadow-2xl transition-all mb-5 md:mb-6 flex items-center justify-center gap-3 overflow-hidden group ${loading || !pdfContent
-                                    ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
-                                    : `${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700'} hover:shadow-purple-500/50 transform hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-100 animate-pulse-glow`
+                                ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
+                                : `${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700'} hover:shadow-purple-500/50 transform hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-100 animate-pulse-glow`
                                 }`}
                         >
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
