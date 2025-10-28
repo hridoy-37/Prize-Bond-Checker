@@ -259,35 +259,84 @@ const PrizeBondChecker = () => {
                 </div>
             )}
 
-            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-800 to-gray-900' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} text-white py-6 px-4 shadow-lg sticky top-0 z-50`}>
-                <div className="max-w-4xl mx-auto">
-                    <div className="flex items-center justify-between">
-                        <div className="text-center flex-1">
-                            <h1 className="text-2xl md:text-4xl font-bold mb-1 md:mb-2">
-                                🎟️ Prize Bond Checker
-                            </h1>
-                            <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-blue-100'}`}>
-                                Check your bonds instantly, completely offline
-                            </p>
-                        </div>
-                        <button
-                            onClick={toggleDarkMode}
-                            className={`ml-4 p-2 md:p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-400'} transition-colors`}
-                            aria-label="Toggle dark mode"
+            <div
+                className={`${darkMode
+                        ? 'bg-gradient-to-r from-gray-800 to-gray-900'
+                        : 'bg-gradient-to-r from-blue-600 to-indigo-600'
+                    } text-white py-4 px-4 md:py-6 shadow-lg sticky top-0 z-50`}
+            >
+                <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:justify-between">
+                    {/* Title */}
+                    <div className="text-center sm:text-left flex-1 mb-2 sm:mb-0">
+                        <h1
+                            className="text-2xl md:text-4xl font-bold mb-1 md:mb-2 truncate"
+                            style={{
+                                // Ultra-small phones (<375px)
+                                '@media (max-width: 374px)': {
+                                    fontSize: '1rem', // smaller font
+                                },
+                            }}
                         >
-                            {darkMode ? (
-                                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            ) : (
-                                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                </svg>
-                            )}
-                        </button>
+                            🎟️ Prize Bond Checker
+                        </h1>
+                        <p
+                            className={`text-xs md:text-sm ${darkMode ? 'text-gray-300' : 'text-blue-100'
+                                }`}
+                            style={{
+                                '@media (max-width: 374px)': {
+                                    fontSize: '0.65rem',
+                                },
+                            }}
+                        >
+                            Check your bonds instantly, completely offline
+                        </p>
                     </div>
+
+                    {/* Dark Mode Toggle */}
+                    <button
+                        onClick={toggleDarkMode}
+                        className={`ml-0 sm:ml-4 p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-400'
+                            } transition-colors mt-2 sm:mt-0`}
+                        aria-label="Toggle dark mode"
+                        style={{
+                            '@media (max-width: 374px)': {
+                                padding: '0.3rem',
+                            },
+                        }}
+                    >
+                        {darkMode ? (
+                            <svg
+                                className="w-5 h-5 sm:w-6 sm:h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                                />
+                            </svg>
+                        ) : (
+                            <svg
+                                className="w-5 h-5 sm:w-6 sm:h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                />
+                            </svg>
+                        )}
+                    </button>
                 </div>
             </div>
+
 
             <div className="max-w-4xl mx-auto p-3 md:p-6 pb-20">
                 <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-6 transition-all hover:shadow-lg border ${darkMode ? 'border-gray-700' : ''}`}>
