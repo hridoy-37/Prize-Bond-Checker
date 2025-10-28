@@ -336,25 +336,51 @@ const PrizeBondChecker = () => {
                         </h2>
                     </div>
 
-                    <label className="block">
-                        <div className={`relative border-3 border-dashed ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50'} rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] group-hover:border-blue-500 overflow-hidden`}>
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
-                            <input
-                                type="file"
-                                accept=".pdf"
-                                onChange={handleFileUpload}
-                                className="hidden"
-                                disabled={loading}
-                            />
-                            <Upload className={`mx-auto mb-4 ${darkMode ? 'text-gray-400 group-hover:text-blue-400' : 'text-blue-400 group-hover:text-blue-600'} transition-colors animate-float`} size={48} />
-                            <p className={`text-base md:text-xl font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'} mb-2`}>
-                                {pdfFileName || 'Drop PDF here or click to browse'}
-                            </p>
-                            <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Official prize bond list • Supports Bengali & English
-                            </p>
-                        </div>
+                    <label className="block w-full">
+                        {pdfFileName ? (
+                            <div className={`relative flex items-center justify-between border-2 rounded-2xl p-4 md:p-6 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-800'} transition-all shadow-md`}>
+                                <div className="flex items-center gap-4 overflow-hidden">
+                                    <FileText className="w-6 h-6 md:w-8 md:h-8" />
+                                    <p className="truncate font-bold text-base md:text-lg">{pdfFileName}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setPdfFileName('');
+                                        setPdfContent('');
+                                        showAlert('PDF removed', 'info');
+                                    }}
+                                    className={`ml-4 p-2 rounded-xl ${darkMode ? 'bg-red-700 hover:bg-red-600' : 'bg-red-100 hover:bg-red-200'} transition-colors`}
+                                    aria-label="Delete uploaded PDF"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
+                            </div>
+                        ) : (
+                            <div
+                                className={`relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800'}`}
+                                onClick={() => document.getElementById('pdfUploadInput').click()}
+                            >
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
+                                <input
+                                    id="pdfUploadInput"
+                                    type="file"
+                                    accept=".pdf"
+                                    onChange={handleFileUpload}
+                                    className="hidden"
+                                    disabled={loading}
+                                />
+                                <Upload className={`mx-auto mb-4 ${darkMode ? 'text-gray-400' : 'text-blue-400'} animate-float`} size={48} />
+                                <p className="text-base md:text-xl font-bold mb-2">
+                                    Drop PDF here or click to browse
+                                </p>
+                                <p className="text-xs md:text-sm">
+                                    Official prize bond list • Supports Bengali & English
+                                </p>
+                            </div>
+                        )}
                     </label>
+
 
                     {pdfFileName && (
                         <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideDown`}>
