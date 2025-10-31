@@ -4,20 +4,25 @@ import { useEffect, useRef, useState } from 'react';
 const loadPdfJs = () => {
     return new Promise((resolve) => {
         if (window.pdfjsLib) {
-            resolve(window.pdfjsLib);
-            return;
+            return resolve(window.pdfjsLib);
         }
 
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        const script = document.createElement("script");
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
         script.onload = () => {
+            // Ensure correct reference
+            window.pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+
+            // Worker
             window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
             resolve(window.pdfjsLib);
         };
         document.head.appendChild(script);
     });
 };
+
 
 const styles = `
   @keyframes slideDown {
