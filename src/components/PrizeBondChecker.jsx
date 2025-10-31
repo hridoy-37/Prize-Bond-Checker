@@ -1,5 +1,5 @@
 import { CheckCircle, FileText, History, Loader, Sparkles, Trash2, Upload, XCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const loadPdfJs = () => {
     return new Promise((resolve) => {
@@ -97,6 +97,9 @@ const PrizeBondChecker = () => {
     const [showResults, setShowResults] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
     const [alert, setAlert] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const openFilePicker = () => fileInputRef.current?.click();
 
     useEffect(() => {
         loadRecentChecks();
@@ -393,11 +396,11 @@ const PrizeBondChecker = () => {
                         ) : (
                             <div
                                 className={`relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800'}`}
-                                onClick={() => document.getElementById('pdfUploadInput').click()}
+                                onClick={openFilePicker}
                             >
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer pointer-events-none"></div>
                                 <input
-                                    id="pdfUploadInput"
+                                    ref={fileInputRef}
                                     type="file"
                                     accept=".pdf"
                                     onChange={handleFileUpload}
