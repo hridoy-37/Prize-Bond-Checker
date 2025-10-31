@@ -1,5 +1,5 @@
-import { CheckCircle, FileText, History, Loader, Sparkles, Trash2, Upload, XCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Upload, CheckCircle, XCircle, Loader, History, Trash2, FileText, Sparkles } from 'lucide-react';
 
 const loadPdfJs = () => {
     return new Promise((resolve) => {
@@ -32,6 +32,19 @@ const styles = `
   }
   .animate-slideDown {
     animation: slideDown 0.3s ease-out;
+  }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out;
   }
   @keyframes shimmer {
     0% {
@@ -153,9 +166,11 @@ const PrizeBondChecker = () => {
 
         if (file.type !== 'application/pdf') {
             showAlert('Please upload a PDF file', 'error');
+            e.target.value = ''; // Reset input
             return;
         }
 
+        // Reset previous data when uploading new PDF
         setBondCodes('');
         setResults(null);
         setShowResults(false);
@@ -179,11 +194,15 @@ const PrizeBondChecker = () => {
 
             setPdfContent(fullText);
             setLoading(false);
+            e.target.value = ''; // Reset input for re-upload
             showAlert(`PDF loaded successfully! Found ${pdf.numPages} page(s)`, 'success');
         } catch (error) {
             setLoading(false);
-            showAlert('Failed to load PDF file. Please make sure it is a valid PDF.', 'error');
-            console.error(error);
+            setPdfFileName('');
+            setPdfContent('');
+            e.target.value = ''; // Reset input on error
+            showAlert('Failed to load PDF file. Please try again with a valid PDF.', 'error');
+            console.error('PDF loading error:', error);
         }
     };
 
@@ -256,16 +275,16 @@ const PrizeBondChecker = () => {
             {alert && (
                 <div className="fixed top-24 md:top-28 left-1/2 transform -translate-x-1/2 z-[100] animate-slideDown px-4">
                     <div className={`flex items-center gap-3 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-2xl border-2 backdrop-blur-md ${alert.type === 'success'
-                        ? darkMode
-                            ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
-                            : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-900'
-                        : alert.type === 'error'
                             ? darkMode
-                                ? 'bg-gradient-to-r from-red-900/95 to-rose-900/95 border-red-500/50 text-red-100'
-                                : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-400 text-red-900'
-                            : darkMode
-                                ? 'bg-gradient-to-r from-blue-900/95 to-indigo-900/95 border-blue-500/50 text-blue-100'
-                                : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-400 text-blue-900'
+                                ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
+                                : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-900'
+                            : alert.type === 'error'
+                                ? darkMode
+                                    ? 'bg-gradient-to-r from-red-900/95 to-rose-900/95 border-red-500/50 text-red-100'
+                                    : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-400 text-red-900'
+                                : darkMode
+                                    ? 'bg-gradient-to-r from-blue-900/95 to-indigo-900/95 border-blue-500/50 text-blue-100'
+                                    : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-400 text-blue-900'
                         } min-w-[280px] max-w-md`}>
                         <div className="flex-shrink-0">
                             {alert.type === 'success' ? (
@@ -291,24 +310,24 @@ const PrizeBondChecker = () => {
                 </div>
             )}
 
-            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600'} text-white py-6 px-4 shadow-2xl sticky lg:top-0 z-50 backdrop-blur-sm`}>
+            <div className={`${darkMode ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600'} text-white py-4 md:py-6 px-4 shadow-2xl sticky top-0 z-50 backdrop-blur-sm`}>
                 <div className="max-w-4xl mx-auto">
-                    <div className="flex items-center justify-between">
-                        <div className="text-center flex-1">
-                            <div className="flex items-center justify-center gap-3 mb-2">
-                                <Sparkles className="w-6 h-6 md:w-8 md:h-8 animate-pulse text-yellow-300" />
-                                <h1 className="text-2xl md:text-4xl font-black tracking-tight">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="text-center flex-1 min-w-0">
+                            <div className="flex items-center justify-center gap-2 md:gap-3 mb-1 md:mb-2">
+                                <Sparkles className="w-5 h-5 md:w-8 md:h-8 animate-pulse text-yellow-300 flex-shrink-0" />
+                                <h1 className="text-xl md:text-4xl font-black tracking-tight leading-tight">
                                     Prize Bond Checker
                                 </h1>
-                                <Sparkles className="w-6 h-6 md:w-8 md:h-8 animate-pulse text-yellow-300" />
+                                <Sparkles className="w-5 h-5 md:w-8 md:h-8 animate-pulse text-yellow-300 flex-shrink-0" />
                             </div>
-                            <p className={`text-xs md:text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-blue-100'}`}>
-                                ⚡ Instant Results • 🔒 100% Private • 📱 Works Offline
+                            <p className={`text-xs md:text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-blue-100'} px-2`}>
+                                ⚡ Instant • 🔒 Private • 📱 Offline
                             </p>
                         </div>
                         <button
                             onClick={toggleDarkMode}
-                            className={`ml-4 p-2.5 md:p-3 rounded-xl ${darkMode ? 'bg-gray-700 hover:bg-gray-600 border border-gray-600' : 'bg-white/20 hover:bg-white/30 backdrop-blur-sm'} transition-all duration-300 hover:scale-110 active:scale-95`}
+                            className={`ml-2 p-2 md:p-3 rounded-xl ${darkMode ? 'bg-gray-700 hover:bg-gray-600 border border-gray-600' : 'bg-white/20 hover:bg-white/30 backdrop-blur-sm'} transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0`}
                             aria-label="Toggle dark mode"
                         >
                             {darkMode ? (
@@ -326,80 +345,80 @@ const PrizeBondChecker = () => {
             </div>
 
             <div className="max-w-4xl mx-auto p-3 md:p-6 pb-20">
-                <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-blue-100'} group`}>
-                    <div className="flex items-center gap-3 mb-4 md:mb-5">
-                        <div className={`p-2 md:p-3 rounded-xl ${darkMode ? 'bg-blue-600/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
-                            <FileText className="w-5 h-5 md:w-6 md:h-6" />
-                        </div>
-                        <h2 className={`text-lg md:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                            Upload Prize Bond PDF
-                        </h2>
-                    </div>
-
-                    <label className="block w-full">
-                        {pdfFileName ? (
-                            <div className={`relative flex items-center justify-between border-2 rounded-2xl p-4 md:p-6 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-800'} transition-all shadow-md`}>
-                                <div className="flex items-center gap-4 overflow-hidden">
-                                    <FileText className="w-6 h-6 md:w-8 md:h-8" />
-                                    <p className="truncate font-bold text-base md:text-lg">{pdfFileName}</p>
+                        <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-blue-100'} group`}>
+                            <div className="flex items-center gap-3 mb-4 md:mb-5">
+                                <div className={`p-2 md:p-3 rounded-xl ${darkMode ? 'bg-blue-600/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+                                    <FileText className="w-5 h-5 md:w-6 md:h-6" />
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setPdfFileName('');
-                                        setPdfContent('');
-                                        showAlert('PDF removed', 'info');
-                                    }}
-                                    className={`ml-4 p-2 rounded-xl ${darkMode ? 'bg-red-700 hover:bg-red-600' : 'bg-red-100 hover:bg-red-200'} transition-colors`}
-                                    aria-label="Delete uploaded PDF"
-                                >
-                                    <Trash2 className="w-5 h-5" />
-                                </button>
+                                <h2 className={`text-lg md:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    Upload PDF to Check Bonds
+                                </h2>
                             </div>
-                        ) : (
-                            <div
-                                className={`relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800'}`}
-                                onClick={() => document.getElementById('pdfUploadInput').click()}
-                            >
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
-                                <input
-                                    id="pdfUploadInput"
-                                    type="file"
-                                    accept=".pdf"
-                                    onChange={handleFileUpload}
-                                    className="hidden"
-                                    disabled={loading}
-                                />
-                                <Upload className={`mx-auto mb-4 ${darkMode ? 'text-gray-400' : 'text-blue-400'} animate-float`} size={48} />
-                                <p className="text-base md:text-xl font-bold mb-2">
-                                    Drop PDF here or click to browse
-                                </p>
-                                <p className="text-xs md:text-sm">
-                                    Official prize bond list • Supports Bengali & English
-                                </p>
-                            </div>
-                        )}
-                    </label>
+
+                            <label className="block w-full">
+                                {pdfFileName ? (
+                                    <div className={`relative flex items-center justify-between border-2 rounded-2xl p-4 md:p-6 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-800'} transition-all shadow-md`}>
+                                        <div className="flex items-center gap-4 overflow-hidden">
+                                            <FileText className="w-6 h-6 md:w-8 md:h-8" />
+                                            <p className="truncate font-bold text-base md:text-lg">{pdfFileName}</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPdfFileName('');
+                                                setPdfContent('');
+                                                showAlert('PDF removed', 'info');
+                                            }}
+                                            className={`ml-4 p-2 rounded-xl ${darkMode ? 'bg-red-700 hover:bg-red-600' : 'bg-red-100 hover:bg-red-200'} transition-colors`}
+                                            aria-label="Delete uploaded PDF"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={`relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden ${darkMode ? 'border-gray-600 hover:border-blue-500 bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'border-gray-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800'}`}
+                                        onClick={() => document.getElementById('pdfUploadInput').click()}
+                                    >
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
+                                        <input
+                                            id="pdfUploadInput"
+                                            type="file"
+                                            accept=".pdf"
+                                            onChange={handleFileUpload}
+                                            className="hidden"
+                                            disabled={loading}
+                                        />
+                                        <Upload className={`mx-auto mb-4 ${darkMode ? 'text-gray-400' : 'text-blue-400'} animate-float`} size={48} />
+                                        <p className="text-base md:text-xl font-bold mb-2">
+                                            Drop PDF here or click to browse
+                                        </p>
+                                        <p className="text-xs md:text-sm">
+                                            Official prize bond list • Supports Bengali & English
+                                        </p>
+                                    </div>
+                                )}
+                            </label>
 
 
-                    {pdfFileName && (
-                        <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideDown`}>
-                            <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={24} />
-                            <div className="flex-1 min-w-0">
-                                <p className={`text-sm md:text-base ${darkMode ? 'text-green-200' : 'text-green-900'} font-bold truncate`}>
-                                    {pdfFileName}
-                                </p>
-                                <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                                    Ready to check bonds
-                                </p>
-                            </div>
+                            {pdfFileName && (
+                                <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideDown`}>
+                                    <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={24} />
+                                    <div className="flex-1 min-w-0">
+                                        <p className={`text-sm md:text-base ${darkMode ? 'text-green-200' : 'text-green-900'} font-bold truncate`}>
+                                            {pdfFileName}
+                                        </p>
+                                        <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
+                                            Ready to check bonds
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
 
                 {pdfContent && (
                     <>
-                        <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-purple-100'} animate-slideDown`}>
+                        <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50' : 'bg-white/80 backdrop-blur-sm'} rounded-2xl shadow-xl p-5 md:p-8 mb-5 md:mb-6 transition-all hover:shadow-2xl border-2 ${darkMode ? 'border-gray-700' : 'border-purple-100'} animate-slideUp`}>
                             <div className="flex items-center gap-3 mb-4 md:mb-5">
                                 <div className={`p-2 md:p-3 rounded-xl ${darkMode ? 'bg-purple-600/20 text-purple-400' : 'bg-purple-100 text-purple-600'}`}>
                                     <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,8 +447,8 @@ const PrizeBondChecker = () => {
                             onClick={checkBonds}
                             disabled={loading || !pdfContent}
                             className={`relative w-full py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl text-white shadow-2xl transition-all mb-5 md:mb-6 flex items-center justify-center gap-3 overflow-hidden group ${loading || !pdfContent
-                                ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
-                                : `${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700'} hover:shadow-purple-500/50 transform hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-100 animate-pulse-glow`
+                                    ? `${darkMode ? 'bg-gray-700' : 'bg-gray-400'} cursor-not-allowed`
+                                    : `${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700'} hover:shadow-purple-500/50 transform hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-100 animate-pulse-glow`
                                 }`}
                         >
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
@@ -521,7 +540,7 @@ const PrizeBondChecker = () => {
 
                         <button
                             onClick={clearResults}
-                            className={`w-full py-4 mb-4 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border-2 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl`}
+                            className={`w-full py-4 mb-5 ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border-2 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl`}
                         >
                             ← Check Again
                         </button>
