@@ -288,7 +288,7 @@ const PrizeBondChecker = () => {
     return (
         <div className={`min-h-screen transition-all duration-500 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'}`}>
             {alert && (
-                <div className="fixed top-24 md:top-28 left-1/2 transform -translate-x-1/2 z-[100] animate-slideUp px-4">
+                <div className="fixed top-24 md:top-28 left-1/2 transform -translate-x-1/2 z-[100] animate-slideDown px-4">
                     <div className={`flex items-center gap-3 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-2xl border-2 backdrop-blur-md ${alert.type === 'success'
                         ? darkMode
                             ? 'bg-gradient-to-r from-green-900/95 to-emerald-900/95 border-green-500/50 text-green-100'
@@ -417,7 +417,7 @@ const PrizeBondChecker = () => {
 
 
                     {pdfFileName && (
-                        <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideUp`}>
+                        <div className={`mt-5 p-4 ${darkMode ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-600/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'} border-2 rounded-xl flex items-center gap-3 animate-slideDown`}>
                             <CheckCircle className={`${darkMode ? 'text-green-400' : 'text-green-600'} flex-shrink-0`} size={24} />
                             <div className="flex-1 min-w-0">
                                 <p className={`text-sm md:text-base ${darkMode ? 'text-green-200' : 'text-green-900'} font-bold truncate`}>
@@ -485,7 +485,7 @@ const PrizeBondChecker = () => {
 
                 {results && (
                     <div
-                        className={`transition-all duration-500 animate-slideUp ${showResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                        className={`transition-all duration-500 ${showResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                             }`}
                     >
                         {results.matched.length > 0 ? (
